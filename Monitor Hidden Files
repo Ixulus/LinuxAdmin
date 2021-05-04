@@ -1,0 +1,15 @@
+#!/bin/bash
+
+for i in $(find $PWD -maxdepth 1 -type f -name ".*"); do
+	name=$(basename $i)
+	if [ -f /home/karnold/Security/HiddenHashes/$name.hash ]; then
+		sha512sum -c /home/karnold/Security/HiddenHashes/$name.hash --status
+		if [ $? -ne 0 ]; then
+			echo Hidden file $i has been altered as of last check at $(date) | tee -a /home/karnold/Security/HiddenFileAlert
+			sha512sum $i > /home/karnold/Security/HiddenHashes/$name.hash
+			stat $i | grep 'Modify' >> /home/karnold/Security/HiddenFileAlert	
+		fi
+	else
+	sha512sum $i > /home/karnold/Security/HiddenHashes/$name.hash	
+fi
+done
