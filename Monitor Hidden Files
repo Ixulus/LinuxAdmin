@@ -1,0 +1,17 @@
+#!/bin/bash
+
+for i in $(find / -path /proc -prune -o -path /sys -prune -o -type f -user root); do
+	name=$(basename $i)
+	if [ -f /home/karnold/Security/RootHashes/$name.hash ]; then
+		sha512sum -c /home/karnold/Security/RootHashes/$name.hash --status
+		if [ $? -ne 0 ]; then
+			echo File $i has been altered as of last check at $(date) | tee -a /home/karnold/Security/RootExeAlert
+			sha512sum $i > /home/karnold/Security/RootHashes/$name.hash
+			stat $i | grep 'Modify' >> /home/karnold/Security/RootExeAlert 
+		fi
+	else
+	sha512sum $i > /home/karnold/Security/RootHashes/$name.hash	
+fi
+done
+
+
