@@ -1,0 +1,11 @@
+#!/bin/bash
+/usr/bin/ls -alis | /usr/bin/sha512sum > /home/karnold/Security/Compare
+if [ -f Compare.orig ]; then
+	/usr/bin/diff  /home/karnold/Security/Compare  /home/karnold/Security/Compare.orig
+       if [ Compare != Compare.orig ]; then
+	       echo The directory /usr/bin has been altered as of last check at 
+	       $(date) >> /home/karnold/Security/Notice
+       fi
+else
+	/usr/bin/mv /home/karnold/Security/Compare{,.orig} 
+fi
