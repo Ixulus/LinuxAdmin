@@ -1,0 +1,5 @@
+#!/bin/bash
+grep "success" /var/log/secure | sed -n '/0[0-6]/p' >> /home/karnold/Security/CheckUsers 
+# Line above matches any command that has successfully logged in between 12 AM and 6 AM
+grep "success" /var/log/secure | sed '/karno/p' >> /home/karnold/Security/CheckUsers
+# Line above matches specific users, this user is my Windows machine
